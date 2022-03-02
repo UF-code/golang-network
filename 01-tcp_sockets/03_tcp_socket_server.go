@@ -9,6 +9,7 @@ import (
 	"runtime"
 )
 
+// Setting up The Connection Variables
 const (
 	connection_host = "localhost"
 	connection_port = "8080"
@@ -20,17 +21,17 @@ func main() {
 	// Number of Goroutines Currently Occupied
 	fmt.Printf("Goroutines: %v\n", runtime.NumGoroutine())
 
-	// Start the TCP Socket Server
+	// Creating the TCP Socket Server
 	SocketServer(connection_type, connection_addr)
 
 }
 
 func SocketServer(cnx_type string, cnx_addr string) {
-	// Prompting the Server Type and Connection Address
+	// Prompting the Socket Type and Socket Address
 	fmt.Printf("Starting %v Server on %v\n",
 		cnx_type, cnx_addr)
 
-	// Creating a Listener who listens the connected client
+	// Creating a Listener Who Listens the Connected Client
 	listen, err := net.Listen(cnx_type, cnx_addr)
 	if err != nil {
 		fmt.Println("Error Listening: ", err.Error())
@@ -58,7 +59,6 @@ func SocketServer(cnx_type string, cnx_addr string) {
 		fmt.Printf("Goroutines: %v\n", runtime.NumGoroutine())
 
 	}
-
 }
 
 func handleConnection(cnx net.Conn) {
@@ -73,7 +73,8 @@ func handleConnection(cnx net.Conn) {
 	}
 
 	// Prompting Converted Message From Client Who Send the Message
-	log.Printf("Client %v Message: %v", cnx.RemoteAddr().String(), string(buffer[:len(buffer)-1]))
+	log.Printf("Client %v Message: %v", cnx.RemoteAddr().String(),
+		string(buffer[:len(buffer)-1]))
 
 	// Write to the Socket
 	cnx.Write(buffer)
