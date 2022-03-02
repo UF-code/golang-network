@@ -17,6 +17,7 @@ const (
 
 func main() {
 	//
+	SocketClient(connection_type, connection_addr)
 
 }
 
@@ -30,7 +31,7 @@ func SocketClient(cnx_type string, cnx_addr string) {
 		os.Exit(1)
 	}
 	//
-	defer listen.Close()
+	defer connection.Close()
 
 	//
 	reader := bufio.NewReader(os.Stdin)
