@@ -7,7 +7,6 @@ import (
 	"net"
 	"os"
 	"runtime"
-	"sync"
 )
 
 const (
@@ -17,38 +16,45 @@ const (
 	connection_type = "tcp"
 )
 
-var wg sync.WaitGroup
-
 func main() {
+	// Number of Goroutines Currently Occupied
 	fmt.Printf("Goroutines: %v\n", runtime.NumGoroutine())
+
+	// Start the TCP Socket Server
 	SocketServer(connection_type, connection_addr)
 
 }
 
 func SocketServer(cnx_type string, cnx_addr string) {
+	// Prompting the Server Type and Connection Address
 	fmt.Printf("Starting %v Server on %v\n",
 		cnx_type, cnx_addr)
 
+	// Creating a Listener who listens the connected client
 	listen, err := net.Listen(cnx_type, cnx_addr)
 	if err != nil {
 		fmt.Println("Error Listening: ", err.Error())
 		os.Exit(1)
 	}
-	//
+
+	// End of the Program Listener Will Close
 	defer listen.Close()
 
-	//
+	// Getting Data From Clients Forever if It's Interrupted
 	for {
-		//
+		// Accepts the Connection
 		connection, err := listen.Accept()
 		if err != nil {
 			fmt.Println("Error Connecting:", err.Error())
 			return
 		}
+		// Prompting Clients Address
 		fmt.Printf("Client %v Connected\n", connection.RemoteAddr().String())
 
-		wg.Add(1)
+		// Running Concurrent Connection Handler
 		go handleConnection(connection)
+
+		// Number of Goroutines Currently Occupied
 		fmt.Printf("Goroutines: %v\n", runtime.NumGoroutine())
 
 	}
@@ -56,23 +62,23 @@ func SocketServer(cnx_type string, cnx_addr string) {
 }
 
 func handleConnection(cnx net.Conn) {
-	//
+	// Creating a Buffer to Read Received Btyes From Connection
 	buffer, err := bufio.NewReader(cnx).ReadBytes('\n')
 
-	//
+	// When the Client Left It Causes Error and We Prompting That Message
 	if err != nil {
 		fmt.Printf("Client %v Left\n", cnx.RemoteAddr().String())
 		cnx.Close()
 		return
 	}
 
-	//
+	// Prompting Converted Message From Client Who Send the Message
 	log.Printf("Client %v Message: %v", cnx.RemoteAddr().String(), string(buffer[:len(buffer)-1]))
 
-	//
+	// Write to the Socket
 	cnx.Write(buffer)
 
-	// restart
+	// Restart the Handle Connection
 	handleConnection(cnx)
 
 }
