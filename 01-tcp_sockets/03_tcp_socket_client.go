@@ -19,7 +19,6 @@ const (
 func main() {
 	// Connecting to the TCP Socket Server
 	SocketClient(connection_type, connection_addr)
-
 }
 
 func SocketClient(cnx_type string, cnx_addr string) {

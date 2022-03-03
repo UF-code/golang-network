@@ -23,7 +23,6 @@ func main() {
 
 	// Creating the TCP Socket Server
 	SocketServer(connection_type, connection_addr)
-
 }
 
 func SocketServer(cnx_type string, cnx_addr string) {
@@ -41,7 +40,7 @@ func SocketServer(cnx_type string, cnx_addr string) {
 	// End of the Program Listener Will Close
 	defer listen.Close()
 
-	// Getting Data From Clients Forever if It's Interrupted
+	// Getting Data From Clients Forever Until It's Interrupted
 	for {
 		// Accepts the Connection
 		connection, err := listen.Accept()
