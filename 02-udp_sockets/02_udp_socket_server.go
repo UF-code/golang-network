@@ -21,10 +21,6 @@ func handleUDPConnection(conn *net.UDPConn) {
 		log.Fatal(err)
 	}
 
-	// NOTE : Need to specify client address in WriteToUDP() function
-	//        otherwise, you will get this error message
-	//        write udp : write: destination address required if you use Write() function instead of WriteToUDP()
-
 	// write message back to client
 	message := []byte("Hello UDP client!")
 	_, err = conn.WriteToUDP(message, addr)
