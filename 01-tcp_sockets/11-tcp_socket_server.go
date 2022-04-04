@@ -49,7 +49,6 @@ func SocketServer(cnx_type string, cnx_addr string) {
 	handleConnection(connection)
 }
 
-//
 func handleConnection(cnx net.Conn) {
 	// Creating a Buffer to Read Received Bytes From Connection
 	message, err := bufio.NewReader(cnx).ReadBytes('\n')
