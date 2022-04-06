@@ -27,9 +27,9 @@ func main() {
 	// Close the listener when the applicationn close
 	defer listen.Close()
 
-	// run loop forever, until exit
+	// Getting Data From Clients Forever Until It's Interrupted
 	for {
-		// listen for an incoming connection
+		// Listen for an incoming connection
 		connection, err := listen.Accept()
 		if err != nil {
 			fmt.Println("Error Connecting:", err.Error())
@@ -39,31 +39,31 @@ func main() {
 
 		fmt.Printf("Client %v Connected\n", connection.RemoteAddr().String())
 
-		// handle connections concurrently in a new goroutine
+		// Handling Connection
 		handleConnection(connection)
 	}
 
 }
 
-// handleConnection handles logic for a single connection request
-func handleConnection(conn net.Conn) {
-	// buffer client input until a newline
-	buffer, err := bufio.NewReader(conn).ReadBytes('\n')
+// HandleConnection handles logic for a single connection request
+func handleConnection(cnx net.Conn) {
+	// Buffer client input until a newline
+	buffer, err := bufio.NewReader(cnx).ReadBytes('\n')
 
-	// close left clients
+	// Close left clients
 	if err != nil {
-		fmt.Println("client left")
-		conn.Close()
+		fmt.Printf("Client %v Left\n", cnx.RemoteAddr().String())
+		cnx.Close()
 		return
 	}
 
 	// Print response message, stripping newline character
 	log.Println("Client message:", string(buffer[:len(buffer)-1]))
 
-	// send response message to the client
-	conn.Write(buffer)
+	// Send response message to the client
+	cnx.Write(buffer)
 
-	// restart the process
-	handleConnection(conn)
+	// Restart the process
+	handleConnection(cnx)
 
 }

@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+// Setting up The Connection Variables
 const (
 	connection_host = "localhost" // 127.0.0.1
 	connection_port = "8080"
@@ -16,34 +17,42 @@ const (
 )
 
 func main() {
-	// Start the client and connect to the server.
-	fmt.Printf("Connecting to %v Server %v\n",
-		connection_type, connection_addr)
+	// Connecting to the TCP Socket Server
+	SocketClient(connection_type, connection_addr)
+}
 
-	connection, err := net.Dial(connection_type, connection_addr)
+func SocketClient(cnx_type string, cnx_addr string) {
+	// Prompting the Connection of Client
+	fmt.Printf("Connecting to %v Server %v \n", cnx_type, cnx_addr)
+
+	// Connecting to TCP Socket Server
+	dial, err := net.Dial(cnx_type, cnx_addr)
 	if err != nil {
-		fmt.Println("Error Connecting: ", err.Error())
+		fmt.Println("Error Listening: ", err.Error())
 		os.Exit(1)
 	}
 
-	// create new reader from stdin
+	// End of the Program Dialer Will Close
+	defer dial.Close()
+
+	// Creating New Reader From Stdin
 	reader := bufio.NewReader(os.Stdin)
 
-	// run loop forever, until exit
+	// Sending Message to the Server Forever Until It's Interrupted
 	for {
-		// prompting message
-		fmt.Print("Text to send: ")
+		// Prompting Message
+		fmt.Print("Text to Send: ")
 
-		// read in input until newline, enter key
+		// Read Input Until Newline, 'enter key'
 		input, _ := reader.ReadString('\n')
 
-		// send to socket connection
-		connection.Write([]byte(input))
+		// Send Socket Connection
+		dial.Write([]byte(input))
 
-		// listen for relay
-		message, _ := bufio.NewReader(connection).ReadString('\n')
+		// Listen For Relay
+		message, _ := bufio.NewReader(dial).ReadString('\n')
 
-		// print server relay
-		log.Print("server relay: " + message)
+		// Prompt the Server Relay
+		log.Print("Server relay: ", message)
 	}
 }
