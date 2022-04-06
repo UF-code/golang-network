@@ -65,5 +65,4 @@ func handleConnection(cnx net.Conn) {
 
 	// Restart the process
 	handleConnection(cnx)
-
 }
