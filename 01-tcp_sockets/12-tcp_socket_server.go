@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	connection_host = "localhost"
+	connection_host = "localhost" // 127.0.0.1
 	connection_port = "8080"
 	connection_addr = connection_host + ":" + connection_port
 	connection_type = "tcp"
@@ -40,7 +40,7 @@ func main() {
 		fmt.Printf("Client %v Connected\n", connection.RemoteAddr().String())
 
 		// handle connections concurrently in a new goroutine
-		go handleConnection(connection)
+		handleConnection(connection)
 	}
 
 }
