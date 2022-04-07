@@ -7,7 +7,6 @@ import (
 )
 
 func handleUDPConnection(conn *net.UDPConn) {
-
 	// here is where you want to do stuff like read or write to client
 
 	buffer := make([]byte, 1024)
@@ -21,29 +20,31 @@ func handleUDPConnection(conn *net.UDPConn) {
 		log.Fatal(err)
 	}
 
-	// write message back to client
-	message := []byte("Hello UDP client!")
+	// NOTE : Need to specify client address in WriteToUDP() function
+	//        otherwise, you will get this error message
+	//        write udp : write: destination address required if you use Write() function instead of WriteToUDP()
+
+	//
+	message := []byte("server ")
 	_, err = conn.WriteToUDP(message, addr)
 
 	if err != nil {
 		log.Println(err)
 	}
-
 }
 
 func main() {
-	connection_host := "localhost"
-	connection_port := "8080"
-	connection_addr := connection_host + ":" + connection_port
+	hostName := "localhost"
+	service := hostName + ":" + "8080"
 
-	// udpAddr, err := net.ResolveUDPAddr("udp4", connection_addr)
+	udpAddr, err := net.ResolveUDPAddr("udp4", service)
 
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// setup listener for incoming UDP connection
-	ln, err := net.ListenPacket("udp", connection_addr)
+	ln, err := net.ListenUDP("udp", udpAddr)
 
 	if err != nil {
 		log.Fatal(err)
@@ -53,23 +54,10 @@ func main() {
 
 	defer ln.Close()
 
-	for {
-		// wait for UDP client to connect
-		// handleUDPConnection()
-	}
+	// for {
+	// 	// wait for UDP client to connect
+	// 	handleUDPConnection(ln)
+	// }
 
+	handleUDPConnection(ln)
 }
-
-// // listen to incoming udp packets
-// pc, err := net.ListenPacket("udp", "host:port")
-// if err != nil {
-// 	log.Fatal(err)
-// }
-// defer pc.Close()
-
-// //simple read
-// buffer := make([]byte, 1024)
-// pc.ReadFrom(buffer)
-
-// //simple write
-// pc.WriteTo([]byte("Hello from client"), addr)
