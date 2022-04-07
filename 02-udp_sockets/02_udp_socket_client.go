@@ -10,7 +10,7 @@ import (
 
 func main() {
 	hostName := "localhost"
-	portNum := "6000"
+	portNum := "8080"
 
 	service := hostName + ":" + portNum
 

@@ -36,15 +36,17 @@ func udpSocketClient(cnx_type string, cnx_addr string) {
 	defer cnx.Close()
 
 	//
-	reader := bufio.NewReader(os.Stdin)
+	for {
+		reader := bufio.NewReader(os.Stdin)
 
-	//
-	fmt.Print("Text to be Sent: ")
-	input, _ := reader.ReadString('\n')
-	message := []byte(input)
+		//
+		fmt.Print("Text to be Sent: ")
+		input, _ := reader.ReadString('\n')
+		message := []byte(input)
 
-	_, err = cnx.Write(message)
-	if err != nil {
-		log.Println(err)
+		_, err = cnx.Write(message)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 }
